@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Created by IntelliJ IDEA.
+  User: Евгений
+  Date: 09.12.2019
+  Time: 21:21
+-->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html" id="content">
+
+<h:head>
+    <title>Лаба 3</title>
+    <h:outputStylesheet library="css" name="start.css"/>
+    <h:outputScript library="js" name="Time.js"/>
+</h:head>
+
+<h:body onload="showTime()" >
+    <h1>Лабораторная работа 3</h1>
+    <h2>Вотинцев Евгений Вячеславович</h2>
+    <h2>Группа: P3202</h2>
+    <h2>Вариант: 2918</h2>
+    <table width="100%" >
+        <tr>
+            <td id="link" align="center" style="width: 50%">
+                <h:form>
+                    <h:commandButton styleClass="button" action="goToIndex" value="На основную" id="submit"/>
+                </h:form>
+            </td>
+            <td id="time" align="center" style="font-size: 20px">
+
+            </td>
+        </tr>
+    </table>
+</h:body>
+
+</html>

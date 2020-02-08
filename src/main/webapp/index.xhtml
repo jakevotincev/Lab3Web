@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      id="content"
+>
+
+<h:head>
+    <title>Лаба 3</title>
+    <h:outputStylesheet library="css" name="style.css"/>
+    <h:outputScript library="js" name="CanwasDrawer.js"/>
+    <h:outputScript library="js" name="jquery-3.4.1.js"/>
+    <h:outputScript library="js" name="Validation.js"/>
+
+</h:head>
+<h:body onload="drawCoord(); drawFigure(); redrawPoints()">
+    <table>
+        <tr>
+            <td>
+                <h:form prependId="false" id="form">
+                    <h:panelGrid>
+                        <h:outputLabel value="X" for="X"/>
+                        <h:panelGroup>
+                            <ace:sliderEntry id="X" min="-2" max="2" stepPercent="25" value="#{pointBean.x}">
+                                <ace:ajax event="slide" execute="@this" render="xValue"/>
+                            </ace:sliderEntry>
+                        </h:panelGroup>
+
+                        <h:outputText id="xValue" value="#{pointBean.x}"/>
+                    </h:panelGrid>
+
+                    <h:panelGrid>
+                        <h:outputLabel value="Y" for="Y"/>
+                        <h:inputText id="Y" value="#{pointBean.y}" required="true"
+                                     validatorMessage="Это поле должно содержать число от -5 до 5"
+                                     onchange="validateY()">
+                            <f:validateDoubleRange minimum="-5" maximum="5"/>
+                            <f:ajax render="errmessage"/>
+                        </h:inputText>
+                        <h:message for="Y" style="color: #EC1947" id="errmessage"/>
+                    </h:panelGrid>
+
+                    <h:panelGrid columns="1">
+                        <h:outputLabel value="R" for="R"/>
+
+                        <ace:sliderEntry id="R" min="100" max="500" stepPercent="6.25" value="#{pointBean.r}"
+                                         onSlideEnd="redrawPoints()">
+                            <ace:ajax event="slide" execute="@this" render="rValue"/>
+                        </ace:sliderEntry>
+
+                        <h:outputText id="rValue" value="#{pointBean.r/100}"/>
+                    </h:panelGrid>
+
+                    <h:commandButton styleClass="button" value="Проверить" action="#{pointBean.checkArea()}"
+                                     id="checkButton">
+                        <f:ajax execute="form" render="resultTable" onevent="handler"/>
+                    </h:commandButton>
+                </h:form>
+                <h:form prependId="false" id="hiddenForm">
+                    <h:inputHidden id="hiddenX" value="#{pointBean.x}"/>
+                    <h:inputHidden id="hiddenY" value="#{pointBean.y}"/>
+                    <h:inputHidden id="hiddenR" value="#{pointBean.r}"/>
+                    <h:commandScript name="submit" action="#{pointBean.checkArea()}" render="resultTable"
+                                     execute="hiddenForm" onevent="handler">
+                    </h:commandScript>
+                </h:form>
+                <div>
+                    <h:form id="remove">
+                        <h:commandButton style="margin-left: 12px" styleClass="button" value="Сбросить"
+                                         action="#{pointBean.removePoints}" onclick="clearPoints()">
+                            <f:ajax execute="remove" render="resultTable"/>
+                        </h:commandButton>
+                    </h:form>
+                </div>
+                <div>
+                    <h:form id="download">
+                        <h:commandButton style="margin-left: 9px" styleClass="button" value="Загрузить"
+                                         action="#{pointBean.downloadPoints}">
+                            <f:ajax execute="download" render="resultTable" onevent="afterDownload" />
+                        </h:commandButton>
+                    </h:form>
+                </div>
+            </td>
+            <td align="center">
+                <canvas id="canvas" width="350" height="350" onclick="sendRequest(event)"/>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center">
+                <h:panelGroup id="resultTable">
+                    <h:dataTable id="table" styleClass="answerTable" value="#{pointBean.points}" var="point">
+                        <h:column>
+                            <f:facet name="header">X</f:facet>
+                            <h:outputText value="#{point.x}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Y</f:facet>
+                            <h:outputText value="#{point.y}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">R</f:facet>
+                            <h:outputText value="#{point.r/100}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Входит/Не входит</f:facet>
+                            <h:outputText value="#{point.strIncluded}"/>
+                        </h:column>
+                    </h:dataTable>
+                </h:panelGroup>
+
+                <h:form>
+                    <h:commandButton action="goToStart" value="На стартовую" styleClass="button"
+                                     style="margin-top: 15px"/>
+                </h:form>
+
+            </td>
+        </tr>
+    </table>
+</h:body>
+</html>
